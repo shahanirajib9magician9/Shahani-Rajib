@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <defs>
+    <filter id="cyanGlow" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="0" stdDeviation="1.5" flood-color="#00e5ff" flood-opacity="0.9"/>
+    </filter>
+  </defs>
+  <g filter="url(#cyanGlow)">
+    <!-- Outer Teal Certificate Body -->
+    <rect x="12" y="24" width="96" height="66" rx="5" fill="#2cc4b6" stroke="#283558" stroke-width="3"/>
+    <!-- Right side subtle shading -->
+    <path d="M101 25.5 H104 A2.5 2.5 0 0 1 106.5 28 V86 A2.5 2.5 0 0 1 104 88.5 H101 Z" fill="#1ea397"/>
+    <!-- Left white highlight bar & dot -->
+    <rect x="17" y="54" width="2.8" height="10" rx="1.4" fill="#ffffff"/>
+    <circle cx="18.4" cy="68.5" r="1.4" fill="#ffffff"/>
+
+    <!-- Inner Off-white Scalloped Document -->
+    <path d="M28 33 H92 A7 7 0 0 0 99 40 V74 A7 7 0 0 0 92 81 H28 A7 7 0 0 0 21 74 V40 A7 7 0 0 0 28 33 Z" fill="#f2f2f0" stroke="#283558" stroke-width="3"/>
+
+    <!-- Certificate Text Lines -->
+    <line x1="42" y1="44" x2="78" y2="44" stroke="#283558" stroke-width="3" stroke-linecap="round"/>
+    <line x1="31" y1="53" x2="89" y2="53" stroke="#283558" stroke-width="3" stroke-linecap="round"/>
+    <line x1="31" y1="62" x2="89" y2="62" stroke="#283558" stroke-width="3" stroke-linecap="round"/>
+    <line x1="31" y1="71" x2="89" y2="71" stroke="#283558" stroke-width="3" stroke-linecap="round"/>
+
+    <!-- Decorative corner accents -->
+    <circle cx="94.5" cy="18" r="1.5" fill="#283558"/>
+    <path d="M101 18 A8 8 0 0 1 111 25" stroke="#283558" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="30" y1="95" x2="42" y2="95" stroke="#283558" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="47" cy="95" r="1.5" fill="#283558"/>
+
+    <!-- Award Ribbons -->
+    <path d="M65 82 L58 111 L66 105 L72 112 L75 84 Z" fill="#eb6a53" stroke="#283558" stroke-width="2.8" stroke-linejoin="round"/>
+    <path d="M83 82 L90 111 L82 105 L76 112 L73 84 Z" fill="#eb6a53" stroke="#283558" stroke-width="2.8" stroke-linejoin="round"/>
+
+    <!-- Golden Seal -->
+    <circle cx="74" cy="76" r="17" fill="#fcd157" stroke="#283558" stroke-width="3"/>
+    <circle cx="74" cy="76" r="13.5" fill="#f6bb3d"/>
+    <!-- White Star -->
+    <polygon points="74,67 76.7,72.5 82.8,73.4 78.4,77.7 79.4,83.8 74,80.9 68.6,83.8 69.6,77.7 65.2,73.4 71.3,72.5" fill="#f7f7f5"/>
+  </g>
+</svg>

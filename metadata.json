@@ -1,0 +1,6 @@
+{
+  "name": "Shahani Rajib Official App",
+  "description": "শাহানী রাজীব - প্রজেক্ট ম্যানেজার, প্রভাষক, জাদুকর, রুবিক্স কিউব এক্সপার্ট এবং লেখক।",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,193 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'Card Characters';
+  src: url('/fonts/CARDC___.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@layer base {
+  * {
+    font-family: 'Aikya', 'Hind Siliguri', 'Poppins', sans-serif;
+  }
+}
+
+.font-card-characters {
+  font-family: 'Card Characters', serif !important;
+}
+
+@keyframes marquee {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(-100%, 0); }
+}
+
+.animate-marquee {
+  display: inline-block;
+  padding-left: 100%;
+  animation: marquee 30s linear infinite;
+}
+
+@keyframes videoSlideEnter {
+  0% {
+    opacity: 0;
+    transform: translateX(36px) scale(0.97);
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+.animate-video-slide {
+  animation: videoSlideEnter 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes tabFadePulse {
+  0%, 2%, 7%, 100% {
+    opacity: 1;
+  }
+  4.5% {
+    opacity: 0.08;
+  }
+}
+
+.animate-tab-fade {
+  animation: tabFadePulse 10s ease-in-out infinite;
+}
+
+.animate-tab-fade:hover {
+  animation-play-state: paused;
+  opacity: 1;
+}
+
+@keyframes clockCardNudge {
+  0% { transform: rotate(0deg) scale(1); }
+  22% { transform: rotate(-6deg) scale(1.06); }
+  48% { transform: rotate(6deg) scale(1.06); }
+  72% { transform: rotate(-3.5deg) scale(1.03); }
+  100% { transform: rotate(0deg) scale(1); }
+}
+
+.animate-clock-nudge {
+  animation: clockCardNudge 0.42s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes clockCardFlash {
+  0% { opacity: 0; transform: scale(0.92); }
+  25% { opacity: 0.95; transform: scale(1.12); }
+  100% { opacity: 0; transform: scale(1.22); }
+}
+
+.animate-clock-flash {
+  animation: clockCardFlash 0.45s ease-out both;
+}
+
+/* DYNAMIC APP-WIDE COLOR THEME OVERRIDES (Active only when preset !== 'default') */
+:root[data-app-theme="custom"] .app-root-shell {
+  background-color: var(--theme-bg) !important;
+  color: var(--theme-text) !important;
+}
+
+:root[data-app-theme="custom"] .theme-glow-1 {
+  background-color: var(--theme-glow-1) !important;
+}
+
+:root[data-app-theme="custom"] .theme-glow-2 {
+  background-color: var(--theme-glow-2) !important;
+}
+
+:root[data-app-theme="custom"] .theme-glow-3 {
+  background-color: var(--theme-glow-1) !important;
+}
+
+:root[data-app-theme="custom"] .theme-header,
+:root[data-app-theme="custom"] .theme-bottom-nav {
+  background-color: var(--theme-header-bg) !important;
+  border-color: var(--theme-border) !important;
+}
+
+:root[data-app-theme="custom"] .theme-footer {
+  background-color: var(--theme-footer-bg) !important;
+  border-color: var(--theme-border) !important;
+  color: var(--theme-text-soft) !important;
+}
+
+:root[data-app-theme="custom"] .app-root-shell [class*="bg-[#070711]"],
+:root[data-app-theme="custom"] .app-root-shell [class*="bg-[#06060e]"] {
+  background-color: var(--theme-bg) !important;
+}
+
+:root[data-app-theme="custom"] .app-root-shell [class*="bg-[#0d0d1f]"] {
+  background-color: var(--theme-header-bg) !important;
+}
+
+:root[data-app-theme="custom"] .app-root-shell [class*="bg-[#13132b]"],
+:root[data-app-theme="custom"] .app-root-shell [class*="bg-[#121225]"],
+:root[data-app-theme="custom"] .app-root-shell [class*="bg-[#14142e]"] {
+  background-color: var(--theme-surface) !important;
+}
+
+:root[data-app-theme="custom"] .app-root-shell [class*="bg-[#1b1b38]"],
+:root[data-app-theme="custom"] .app-root-shell [class*="bg-[#181833]"],
+:root[data-app-theme="custom"] .app-root-shell [class*="bg-[#101026]"],
+:root[data-app-theme="custom"] .app-root-shell [class*="bg-[#0e0e22]"],
+:root[data-app-theme="custom"] .app-root-shell [class*="bg-[#0a0a18]"],
+:root[data-app-theme="custom"] .app-root-shell [class*="bg-[#12122a]"],
+:root[data-app-theme="custom"] .app-root-shell [class*="bg-[#161632]"] {
+  background-color: var(--theme-surface-alt) !important;
+}
+
+:root[data-app-theme="custom"] .app-root-shell [class*="bg-purple-950"],
+:root[data-app-theme="custom"] .app-root-shell [class*="bg-purple-900"],
+:root[data-app-theme="custom"] .app-root-shell [class*="bg-amber-950"] {
+  background-color: var(--theme-secondary-soft) !important;
+}
+
+:root[data-app-theme="custom"] .app-root-shell [class*="border-purple-"] {
+  border-color: var(--theme-border) !important;
+}
+
+:root[data-app-theme="custom"] .app-root-shell [class*="border-amber-"] {
+  border-color: var(--theme-accent-border) !important;
+}
+
+:root[data-app-theme="custom"] .app-root-shell [class*="text-amber-"] {
+  color: var(--theme-accent) !important;
+}
+
+:root[data-app-theme="custom"] .app-root-shell [class*="text-purple-"] {
+  color: var(--theme-text-soft) !important;
+}
+
+:root[data-app-theme="custom"] .app-root-shell [class*="bg-amber-500"],
+:root[data-app-theme="custom"] .app-root-shell [class*="bg-amber-400"] {
+  background-color: var(--theme-accent) !important;
+  color: var(--theme-on-accent) !important;
+}
+
+:root[data-app-theme="custom"] .app-root-shell [class*="bg-purple-600"],
+:root[data-app-theme="custom"] .app-root-shell [class*="bg-purple-800"] {
+  background-color: var(--theme-secondary) !important;
+  color: #ffffff !important;
+}
+
+:root[data-app-theme="custom"] .app-root-shell [class*="from-purple-600"] {
+  --tw-gradient-from: var(--theme-secondary) !important;
+}
+
+:root[data-app-theme="custom"] .app-root-shell [class*="to-amber-500"] {
+  --tw-gradient-to: var(--theme-accent) !important;
+}
+
+:root[data-app-theme="custom"][data-app-light="true"] .app-root-shell :is(h1, h2, h3, h4, p, input, textarea, select, label):not([class*="bg-red"]):not([class*="bg-emerald"]):not([class*="bg-purple"]):not([class*="bg-amber"]) {
+  color: var(--theme-text) !important;
+}
+
+:root[data-app-theme="custom"][data-app-light="true"] .app-root-shell [class*="text-gray-"] {
+  color: var(--theme-text-soft) !important;
+}
+

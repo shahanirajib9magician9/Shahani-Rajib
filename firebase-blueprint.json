@@ -1,0 +1,280 @@
+{
+  "entities": {
+    "SiteState": {
+      "title": "SiteState",
+      "description": "Global site configuration, books showcase, banners, tabs, subpages, footer, theme, and page item collections.",
+      "type": "object",
+      "properties": {
+        "siteContent": {
+          "type": "object",
+          "description": "Structured map containing site texts, booksCovers, customBlocks, banners, tabs, socialLinks, footer, theme, and customSubPages."
+        },
+        "subpagesContent": {
+          "type": "object",
+          "description": "Map of subpage IDs to arrays of subpage items."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of the last update."
+        },
+        "updatedBy": {
+          "type": "string",
+          "maxLength": 128,
+          "description": "UID of the verified admin who performed the update."
+        }
+      },
+      "required": ["siteContent", "subpagesContent", "updatedAt", "updatedBy"]
+    },
+    "CloneState": {
+      "title": "CloneState",
+      "description": "Isolated cloned website/app configuration owned by a Co-Admin's Google account without affecting site_state/main.",
+      "type": "object",
+      "properties": {
+        "siteContent": {
+          "type": "object",
+          "description": "Cloned siteContent map edited independently by the Co-Admin."
+        },
+        "subpagesContent": {
+          "type": "object",
+          "description": "Cloned subpagesContent map edited independently by the Co-Admin."
+        },
+        "ownerUid": {
+          "type": "string",
+          "maxLength": 128,
+          "description": "Firebase UID of the Google-synced Co-Admin owning this clone, or empty until claimed."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of the last clone update."
+        },
+        "updatedBy": {
+          "type": "string",
+          "maxLength": 128,
+          "description": "UID of the verified user who performed the update."
+        }
+      },
+      "required": ["siteContent", "subpagesContent", "ownerUid", "updatedAt", "updatedBy"]
+    },
+    "CoAdminProfile": {
+      "title": "CoAdminProfile",
+      "description": "Primary-Admin-managed directory record for Co-Admin accounts.",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "maxLength": 150
+        },
+        "tokenHash": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "note": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "active": {
+          "type": "boolean"
+        },
+        "createdBy": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["email", "tokenHash", "note", "active", "createdBy", "createdAt"]
+    },
+    "CoAdminToken": {
+      "title": "CoAdminToken",
+      "description": "PII-free SHA-256 credential token document keyed by hash(email + password) for Co-Admin login verification on clone links.",
+      "type": "object",
+      "properties": {
+        "coAdminId": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "active": {
+          "type": "boolean"
+        },
+        "createdBy": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["coAdminId", "active", "createdBy", "createdAt"]
+    },
+    "CoAdminSyncProfile": {
+      "title": "CoAdminSyncProfile",
+      "description": "PII-isolated Google cloud sync metadata for a Co-Admin UID.",
+      "type": "object",
+      "properties": {
+        "googleEmail": {
+          "type": "string",
+          "maxLength": 150
+        },
+        "coAdminEmail": {
+          "type": "string",
+          "maxLength": 150
+        },
+        "activeCloneId": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["googleEmail", "coAdminEmail", "activeCloneId", "updatedAt"]
+    },
+    "Comment": {
+      "title": "Comment",
+      "description": "Visitor or admin comment on a subpage.",
+      "type": "object",
+      "properties": {
+        "pageId": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "authorName": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "text": {
+          "type": "string",
+          "maxLength": 1500
+        },
+        "dateLabel": {
+          "type": "string",
+          "maxLength": 60
+        },
+        "authorUid": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "isPublic": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["pageId", "authorName", "text", "dateLabel", "authorUid", "isPublic", "createdAt"]
+    },
+    "PageLike": {
+      "title": "PageLike",
+      "description": "Like counter for a page.",
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "number"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["count", "updatedAt"]
+    },
+    "AdminProfile": {
+      "title": "AdminProfile",
+      "description": "Explicit admin UID document for RBAC verification.",
+      "type": "object",
+      "properties": {
+        "role": {
+          "type": "string",
+          "enum": ["admin"],
+          "maxLength": 16
+        }
+      },
+      "required": ["role"]
+    },
+    "BlogPost": {
+      "title": "BlogPost",
+      "description": "Rich blog article authored by a verified site admin containing headline, excerpt, and ordered text/image/video blocks.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "excerpt": {
+          "type": "string",
+          "maxLength": 600
+        },
+        "blocks": {
+          "type": "array",
+          "description": "Ordered array of blog content blocks (text, image, video)."
+        },
+        "published": {
+          "type": "boolean"
+        },
+        "authorUid": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["id", "title", "excerpt", "blocks", "published", "authorUid", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/site_state/{stateId}": {
+      "schema": { "$ref": "#/entities/SiteState" },
+      "description": "Stores the global siteContent and subpagesContent synchronized across devices and shared URLs."
+    },
+    "/clone_states/{cloneId}": {
+      "schema": { "$ref": "#/entities/CloneState" },
+      "description": "Stores isolated cloned siteContent and subpagesContent owned and cloud-synced by a Co-Admin."
+    },
+    "/co_admins/{coAdminId}": {
+      "schema": { "$ref": "#/entities/CoAdminProfile" },
+      "description": "Primary-Admin-only Co-Admin account directory."
+    },
+    "/co_admin_tokens/{tokenHash}": {
+      "schema": { "$ref": "#/entities/CoAdminToken" },
+      "description": "PII-free SHA-256 token lookup for Co-Admin credential verification."
+    },
+    "/co_admin_sync/{uid}": {
+      "schema": { "$ref": "#/entities/CoAdminSyncProfile" },
+      "description": "Private Google cloud sync metadata per Co-Admin UID."
+    },
+    "/comments/{commentId}": {
+      "schema": { "$ref": "#/entities/Comment" },
+      "description": "Stores public page comments."
+    },
+    "/page_likes/{pageId}": {
+      "schema": { "$ref": "#/entities/PageLike" },
+      "description": "Stores per-page like counts."
+    },
+    "/admins/{uid}": {
+      "schema": { "$ref": "#/entities/AdminProfile" },
+      "description": "Admin role markers keyed by Firebase Auth UID."
+    },
+    "/blogs/{blogId}": {
+      "schema": { "$ref": "#/entities/BlogPost" },
+      "description": "Stores published blog articles readable by visitors and writable exclusively by verified Primary Admins."
+    }
+  }
+}

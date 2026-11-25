@@ -1,0 +1,283 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global default deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerifiedUser() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isAdmin() {
+      return isVerifiedUser() && (
+        request.auth.token.email == 'rajib.matador@gmail.com' ||
+        request.auth.token.email == 'rajibshahani9@gmail.com' ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function isValidSiteState(data) {
+      return data.keys().hasAll(['siteContent', 'subpagesContent', 'updatedAt', 'updatedBy']) &&
+        data.keys().hasOnly(['siteContent', 'subpagesContent', 'updatedAt', 'updatedBy']) &&
+        data.siteContent is map &&
+        data.subpagesContent is map &&
+        data.updatedBy is string &&
+        data.updatedBy.size() >= 1 &&
+        data.updatedBy.size() <= 128 &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidCloneState(data) {
+      return data.keys().hasAll(['siteContent', 'subpagesContent', 'ownerUid', 'updatedAt', 'updatedBy']) &&
+        data.keys().hasOnly(['siteContent', 'subpagesContent', 'ownerUid', 'updatedAt', 'updatedBy']) &&
+        data.siteContent is map &&
+        data.subpagesContent is map &&
+        data.ownerUid is string &&
+        data.ownerUid.size() <= 128 &&
+        data.updatedBy is string &&
+        data.updatedBy.size() >= 1 &&
+        data.updatedBy.size() <= 128 &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidCoAdminProfile(data) {
+      return data.keys().hasAll(['email', 'tokenHash', 'note', 'active', 'createdBy', 'createdAt']) &&
+        data.keys().hasOnly(['email', 'tokenHash', 'note', 'active', 'createdBy', 'createdAt']) &&
+        data.email is string && data.email.size() >= 3 && data.email.size() <= 150 &&
+        data.tokenHash is string && data.tokenHash.size() >= 16 && data.tokenHash.size() <= 128 &&
+        data.note is string && data.note.size() <= 200 &&
+        data.active is bool &&
+        data.createdBy is string && data.createdBy.size() >= 1 && data.createdBy.size() <= 128 &&
+        data.createdAt is timestamp;
+    }
+
+    function isValidCoAdminToken(data) {
+      return data.keys().hasAll(['coAdminId', 'active', 'createdBy', 'createdAt']) &&
+        data.keys().hasOnly(['coAdminId', 'active', 'createdBy', 'createdAt']) &&
+        data.coAdminId is string && data.coAdminId.size() >= 1 && data.coAdminId.size() <= 128 &&
+        data.active is bool &&
+        data.createdBy is string && data.createdBy.size() >= 1 && data.createdBy.size() <= 128 &&
+        data.createdAt is timestamp;
+    }
+
+    function isValidCoAdminSyncProfile(data) {
+      return data.keys().hasAll(['googleEmail', 'coAdminEmail', 'activeCloneId', 'updatedAt']) &&
+        data.keys().hasOnly(['googleEmail', 'coAdminEmail', 'activeCloneId', 'updatedAt']) &&
+        data.googleEmail is string && data.googleEmail.size() >= 3 && data.googleEmail.size() <= 150 &&
+        data.coAdminEmail is string && data.coAdminEmail.size() <= 150 &&
+        data.activeCloneId is string && data.activeCloneId.size() >= 1 && data.activeCloneId.size() <= 128 &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidComment(data) {
+      return data.keys().hasAll(['pageId', 'authorName', 'text', 'dateLabel', 'authorUid', 'isPublic', 'createdAt']) &&
+        data.keys().hasOnly(['pageId', 'authorName', 'text', 'dateLabel', 'authorUid', 'isPublic', 'createdAt']) &&
+        data.pageId is string && data.pageId.size() >= 1 && data.pageId.size() <= 100 &&
+        data.authorName is string && data.authorName.size() >= 1 && data.authorName.size() <= 100 &&
+        data.text is string && data.text.size() >= 1 && data.text.size() <= 1500 &&
+        data.dateLabel is string && data.dateLabel.size() >= 1 && data.dateLabel.size() <= 60 &&
+        data.authorUid is string && data.authorUid.size() >= 1 && data.authorUid.size() <= 128 &&
+        data.isPublic is bool &&
+        data.createdAt is timestamp;
+    }
+
+    function isValidPageLike(data) {
+      return data.keys().hasAll(['count', 'updatedAt']) &&
+        data.keys().hasOnly(['count', 'updatedAt']) &&
+        data.count is int &&
+        data.count >= 0 &&
+        data.count <= 10000000 &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidBlogPost(data) {
+      return data.keys().hasAll(['id', 'title', 'excerpt', 'blocks', 'published', 'authorUid', 'createdAt', 'updatedAt']) &&
+        data.keys().hasOnly(['id', 'title', 'excerpt', 'blocks', 'published', 'authorUid', 'createdAt', 'updatedAt']) &&
+        isValidId(data.id) &&
+        data.title is string && data.title.size() >= 1 && data.title.size() <= 300 &&
+        data.excerpt is string && data.excerpt.size() <= 600 &&
+        data.blocks is list && data.blocks.size() >= 1 && data.blocks.size() <= 100 &&
+        data.blocks[0] is map &&
+        data.published is bool &&
+        data.authorUid is string && data.authorUid.size() >= 1 && data.authorUid.size() <= 128 &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    match /test/{docId} {
+      allow get: if isValidId(docId);
+      allow list, write: if false;
+    }
+
+    match /admins/{uid} {
+      allow get: if isSignedIn() && isValidId(uid) && request.auth.uid == uid;
+      allow list, write: if false;
+    }
+
+    match /site_state/{stateId} {
+      allow get: if isValidId(stateId);
+      allow list: if false;
+      allow create: if isAdmin() &&
+        isValidId(stateId) &&
+        isValidSiteState(incoming()) &&
+        incoming().updatedBy == request.auth.uid &&
+        incoming().updatedAt == request.time;
+      allow update: if isAdmin() &&
+        isValidId(stateId) &&
+        isValidSiteState(incoming()) &&
+        incoming().updatedBy == request.auth.uid &&
+        incoming().updatedAt == request.time &&
+        incoming().diff(existing()).affectedKeys().hasOnly(['siteContent', 'subpagesContent', 'updatedAt', 'updatedBy']);
+      allow delete: if isAdmin() && isValidId(stateId);
+    }
+
+    match /clone_states/{cloneId} {
+      allow get: if isValidId(cloneId);
+      allow list: if false;
+      allow create: if isVerifiedUser() &&
+        isValidId(cloneId) &&
+        isValidCloneState(incoming()) &&
+        incoming().updatedBy == request.auth.uid &&
+        incoming().updatedAt == request.time &&
+        (isAdmin() || incoming().ownerUid == request.auth.uid);
+      allow update: if isVerifiedUser() &&
+        isValidId(cloneId) &&
+        isValidCloneState(incoming()) &&
+        incoming().updatedBy == request.auth.uid &&
+        incoming().updatedAt == request.time &&
+        incoming().diff(existing()).affectedKeys().hasOnly(['siteContent', 'subpagesContent', 'ownerUid', 'updatedAt', 'updatedBy']) &&
+        (
+          isAdmin() ||
+          (existing().ownerUid == request.auth.uid && incoming().ownerUid == existing().ownerUid) ||
+          (existing().ownerUid == '' && incoming().ownerUid == request.auth.uid)
+        );
+      allow delete: if isValidId(cloneId) && (isAdmin() || (isVerifiedUser() && existing().ownerUid == request.auth.uid));
+    }
+
+    match /co_admins/{coAdminId} {
+      allow get: if isAdmin() && isValidId(coAdminId);
+      allow list: if isAdmin();
+      allow create: if isAdmin() &&
+        isValidId(coAdminId) &&
+        isValidCoAdminProfile(incoming()) &&
+        incoming().createdBy == request.auth.uid &&
+        incoming().createdAt == request.time;
+      allow update: if isAdmin() &&
+        isValidId(coAdminId) &&
+        isValidCoAdminProfile(incoming()) &&
+        incoming().createdBy == existing().createdBy &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().diff(existing()).affectedKeys().hasOnly(['email', 'tokenHash', 'note', 'active']);
+      allow delete: if isAdmin() && isValidId(coAdminId);
+    }
+
+    match /co_admin_tokens/{tokenHash} {
+      allow get: if isValidId(tokenHash);
+      allow list: if false;
+      allow create: if isAdmin() &&
+        isValidId(tokenHash) &&
+        isValidCoAdminToken(incoming()) &&
+        incoming().createdBy == request.auth.uid &&
+        incoming().createdAt == request.time;
+      allow update: if isAdmin() &&
+        isValidId(tokenHash) &&
+        isValidCoAdminToken(incoming()) &&
+        incoming().createdBy == existing().createdBy &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().diff(existing()).affectedKeys().hasOnly(['active', 'coAdminId']);
+      allow delete: if isAdmin() && isValidId(tokenHash);
+    }
+
+    match /co_admin_sync/{uid} {
+      allow get: if isVerifiedUser() && isValidId(uid) && (request.auth.uid == uid || isAdmin());
+      allow list: if false;
+      allow create: if isVerifiedUser() &&
+        isValidId(uid) &&
+        request.auth.uid == uid &&
+        isValidCoAdminSyncProfile(incoming()) &&
+        incoming().updatedAt == request.time;
+      allow update: if isVerifiedUser() &&
+        isValidId(uid) &&
+        request.auth.uid == uid &&
+        isValidCoAdminSyncProfile(incoming()) &&
+        incoming().updatedAt == request.time &&
+        incoming().diff(existing()).affectedKeys().hasOnly(['googleEmail', 'coAdminEmail', 'activeCloneId', 'updatedAt']);
+      allow delete: if isVerifiedUser() && isValidId(uid) && (request.auth.uid == uid || isAdmin());
+    }
+
+    match /comments/{commentId} {
+      allow get: if isValidId(commentId) && (existing().isPublic == true || isAdmin());
+      allow list: if resource.data.isPublic == true || isAdmin();
+      allow create: if isVerifiedUser() &&
+        isValidId(commentId) &&
+        isValidComment(incoming()) &&
+        incoming().authorUid == request.auth.uid &&
+        incoming().isPublic == true &&
+        incoming().createdAt == request.time;
+      allow update: if isAdmin() &&
+        isValidId(commentId) &&
+        isValidComment(incoming()) &&
+        incoming().authorUid == existing().authorUid &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().diff(existing()).affectedKeys().hasOnly(['text', 'isPublic']);
+      allow delete: if isAdmin() && isValidId(commentId);
+    }
+
+    match /page_likes/{pageId} {
+      allow get: if isValidId(pageId);
+      allow list: if false;
+      allow create: if isVerifiedUser() &&
+        isValidId(pageId) &&
+        isValidPageLike(incoming()) &&
+        (isAdmin() || incoming().count == 1) &&
+        incoming().updatedAt == request.time;
+      allow update: if isVerifiedUser() &&
+        isValidId(pageId) &&
+        isValidPageLike(incoming()) &&
+        incoming().updatedAt == request.time &&
+        incoming().diff(existing()).affectedKeys().hasOnly(['count', 'updatedAt']) &&
+        (isAdmin() || incoming().count == existing().count + 1);
+      allow delete: if isAdmin() && isValidId(pageId);
+    }
+
+    match /blogs/{blogId} {
+      allow get: if isValidId(blogId) && (existing().published == true || isAdmin());
+      allow list: if resource.data.published == true || isAdmin();
+      allow create: if isAdmin() &&
+        isValidId(blogId) &&
+        isValidBlogPost(incoming()) &&
+        incoming().id == blogId &&
+        incoming().authorUid == request.auth.uid &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time;
+      allow update: if isAdmin() &&
+        isValidId(blogId) &&
+        isValidBlogPost(incoming()) &&
+        incoming().id == existing().id &&
+        incoming().authorUid == existing().authorUid &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time &&
+        incoming().diff(existing()).affectedKeys().hasOnly(['title', 'excerpt', 'blocks', 'published', 'updatedAt']);
+      allow delete: if isAdmin() && isValidId(blogId);
+    }
+  }
+}
