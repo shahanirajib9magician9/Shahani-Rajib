@@ -138,15 +138,10 @@ export default function CarouselShowcase({
 
     if (!isActive) {
       return (
-        <div className="w-full h-full bg-gradient-to-br from-[#1b1538] via-[#110f24] to-[#0a0918] flex flex-col items-center justify-center gap-2 p-3 text-center select-none">
+        <div className="w-full h-full bg-gradient-to-br from-[#1b1538] via-[#110f24] to-[#0a0918] flex items-center justify-center p-3 text-center select-none">
           <div className="w-11 h-11 rounded-full bg-amber-500/20 border border-amber-400/60 flex items-center justify-center text-amber-300 shadow-[0_0_18px_rgba(245,158,11,0.3)]">
             <Play size={18} className="ml-0.5" />
           </div>
-          {!compactOverlay && (
-            <span className="text-[11px] font-bold text-purple-200">
-              ভিডিও {idx + 1}
-            </span>
-          )}
         </div>
       );
     }
@@ -193,7 +188,7 @@ export default function CarouselShowcase({
               <div
                 key={`${targetKey}_cf_${idx}`}
                 onClick={() => (!isActive ? goTo(idx) : undefined)}
-                className={`absolute transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] rounded-2xl overflow-hidden ${
+                className={`absolute transition-all ${mode === 'video' ? 'duration-1000' : 'duration-500'} ease-[cubic-bezier(0.22,1,0.36,1)] rounded-2xl overflow-hidden ${
                   mode === 'video'
                     ? 'w-[78%] sm:w-[62%] aspect-video'
                     : 'w-[62%] min-[420px]:w-[52%] sm:w-[44%] h-[190px] min-[420px]:h-[230px] sm:h-[295px]'
@@ -265,20 +260,26 @@ export default function CarouselShowcase({
         <div className="relative rounded-2xl overflow-hidden border border-purple-500/35 bg-black/50 shadow-inner">
           <div
             key={`${targetKey}_stun_${safeIdx}`}
-            className={`w-full transition-all duration-500 animate-video-slide ${
-              mode === 'video' ? 'aspect-video' : 'h-[230px] min-[420px]:h-[290px] sm:h-[380px]'
+            className={`w-full transition-all ${
+              mode === 'video'
+                ? 'duration-1000 animate-video-slide aspect-video'
+                : 'duration-500 animate-video-slide h-[230px] min-[420px]:h-[290px] sm:h-[380px]'
             }`}
           >
             {renderSlideMedia(slides[safeIdx], safeIdx, true)}
           </div>
 
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
-          <div className="absolute bottom-2.5 left-3 right-3 flex items-center justify-between gap-2 pointer-events-none">
-            <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-amber-200 bg-black/60 backdrop-blur-sm px-2.5 py-1 rounded-lg border border-amber-400/30">
-              <Sparkles size={12} className="text-amber-400" />
-              {safeIdx + 1} / {total}
-            </span>
-          </div>
+          {mode !== 'video' && (
+            <>
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
+              <div className="absolute bottom-2.5 left-3 right-3 flex items-center justify-between gap-2 pointer-events-none">
+                <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-amber-200 bg-black/60 backdrop-blur-sm px-2.5 py-1 rounded-lg border border-amber-400/30">
+                  <Sparkles size={12} className="text-amber-400" />
+                  {safeIdx + 1} / {total}
+                </span>
+              </div>
+            </>
+          )}
 
           {total > 1 && (
             <>
@@ -327,9 +328,8 @@ export default function CarouselShowcase({
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full bg-[#1a1638] flex flex-col items-center justify-center gap-0.5 text-amber-300">
-                      <Play size={14} />
-                      <span className="text-[9px] font-bold">ভিডিও {i + 1}</span>
+                    <div className="w-full h-full bg-[#1a1638] flex items-center justify-center text-amber-300">
+                      <Play size={16} className="ml-0.5" />
                     </div>
                   )}
                 </button>
@@ -370,7 +370,7 @@ export default function CarouselShowcase({
               <div
                 key={`${targetKey}_curved_${idx}`}
                 onClick={() => (!isActive ? goTo(idx) : undefined)}
-                className={`absolute transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] rounded-2xl overflow-hidden ${
+                className={`absolute transition-all ${mode === 'video' ? 'duration-1000' : 'duration-500'} ease-[cubic-bezier(0.22,1,0.36,1)] rounded-2xl overflow-hidden ${
                   mode === 'video'
                     ? 'w-[74%] sm:w-[58%] aspect-video'
                     : 'w-[58%] min-[420px]:w-[48%] sm:w-[40%] h-[185px] min-[420px]:h-[225px] sm:h-[285px]'
@@ -471,7 +471,7 @@ export default function CarouselShowcase({
             <div
               key={`${targetKey}_orbit_${idx}`}
               onClick={() => (!isActive ? goTo(idx) : undefined)}
-              className={`absolute transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] rounded-2xl overflow-hidden ${
+              className={`absolute transition-all ${mode === 'video' ? 'duration-1000' : 'duration-700'} ease-[cubic-bezier(0.22,1,0.36,1)] rounded-2xl overflow-hidden ${
                 mode === 'video'
                   ? 'w-[70%] sm:w-[54%] aspect-video'
                   : 'w-[50%] min-[420px]:w-[42%] sm:w-[36%] h-[175px] min-[420px]:h-[210px] sm:h-[260px]'

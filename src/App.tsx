@@ -1963,7 +1963,7 @@ function AppContent() {
     };
   }, []);
 
-  // Automatic video slider effect (4s interval, pauses while a video is playing)
+  // Automatic video slider effect (10s interval, pauses while a video is playing)
   useEffect(() => {
     const entries: [string, string[]][] = Object.entries(siteContent.videoSliders || {}).map(
       ([k, arr]) => [k, Array.isArray(arr) ? arr : []]
@@ -1994,7 +1994,7 @@ function AppContent() {
         });
         return next;
       });
-    }, 4000);
+    }, 10000);
     return () => clearInterval(interval);
   }, [siteContent.videoSliders, siteContent.customBlocks, playingVideoSliders]);
 

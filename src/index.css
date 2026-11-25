@@ -43,7 +43,7 @@
 }
 
 .animate-video-slide {
-  animation: videoSlideEnter 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: videoSlideEnter 1.05s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @keyframes tabFadePulse {
